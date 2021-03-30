@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity() {
             calcularIMC(etPeso.text.toString(), etAltura.text.toString())
         }
 
+        btLimpar.setOnClickListener {
+            etAltura.setText("")
+            etPeso.setText("")
+        }
+
         etAltura.doOnTextChanged {text, start, count, after ->
             tvResultado.text = ""
         }
