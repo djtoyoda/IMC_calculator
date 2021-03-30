@@ -1,15 +1,26 @@
 package com.djtoyoda.imc_calculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity {
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setListeners()
+    }
+    private fun setListeners() {
+        btCalcular?.setOnClickListener {
+            calcularIMC(etPeso.text.toString(), etAltura.text.toString())
+        }
+    }
 
-    btCalcular.setOnClickListener(new View.OnClickListener() {
-        var peso = etPeso.getText().toString()
-        var altura= etAltura.getText().toString()
+    private fun calcularIMC(peso: String, altura: String) {
+        var peso = etPeso.toFloatOrNull()
+        var altura= etAltura.toFloatOrNull()
         var imc = peso / altura / altura
+        //tvResultado.text = "Seu IMC é $imc"
 
     }
+
 }
