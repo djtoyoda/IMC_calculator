@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">IMC_calculator</string>
+    <string name="Titulo">Calcule seu IMC</string>
+    <string name="Faixas">
+        <br><b>Faixas:</b></br>
+        <br>&lt; 17</br>
+        <br>De 17 a 18,5</br>
+        <br>De 18,50 a 25</br>
+        <br>De 25 a 30</br>
+        <br>De 30 a 35</br>
+        <br>De 35 a 40</br>
+        <br>Acima de 40</br>
+    </string>
+    <string name="Significado">
+        <br></br>
+        <br>Muito abaixo do peso</br>
+        <br>Abaixo do peso</br>
+        <br>Peso normal</br>
+        <br>Acima do peso</br>
+        <br>Obesidade I</br>
+        <br>Obesidade II (severa)</br>
+        <br>Obesidade III (mórbida)</br>
+    </string>
+</resources>
