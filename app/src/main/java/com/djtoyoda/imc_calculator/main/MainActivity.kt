@@ -1,4 +1,4 @@
-package com.djtoyoda.imc_calculator
+package com.djtoyoda.imc_calculator.main
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,7 +6,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import com.djtoyoda.imc_calculator.Helpers.HelperDB
+import com.djtoyoda.imc_calculator.R
+import com.djtoyoda.imc_calculator.application.DataIMC
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.historico.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +30,30 @@ class MainActivity : AppCompatActivity() {
             etPeso.setText("")
         }
 
-        etAltura.doOnTextChanged {text, start, count, after ->
+        btGuardar.setOnClickListener {
+            var currentDate = Calendar.getInstance().time.toString()
+            var pesoStr = etPeso.toString()
+            var alturaStr = etPeso.toString()
+            val db = HelperDB(this)
+            var newIMCData = DataIMC()
+            db.adicionarIMC(newIMCData)
+        }
+
+        btHistorico.setOnClickListener {
+            val db = HelperDB(this)
+            val data = db.lerHistorico()
+            tvTabelaHistorico.text = ""
+            for (i in 0 until data.size) {
+                tvTabelaHistorico.append(
+                        data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
+            }
+        }
+
+        etAltura.doOnTextChanged { _, _, _, _ ->
             tvResultado.text = ""
         }
 
-        etPeso.doOnTextChanged {text, start, count, after ->
+        etPeso.doOnTextChanged { _, _, _, _ ->
             tvResultado.text = ""
         }
     }
