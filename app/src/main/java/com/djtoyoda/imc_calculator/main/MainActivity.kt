@@ -10,7 +10,7 @@ import com.djtoyoda.imc_calculator.Helpers.HelperDB
 import com.djtoyoda.imc_calculator.R
 import com.djtoyoda.imc_calculator.application.DataIMC
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.historico.*
+import kotlinx.android.synthetic.main.activity_historico.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -33,20 +33,25 @@ class MainActivity : AppCompatActivity() {
         btGuardar.setOnClickListener {
             var currentDate = Calendar.getInstance().time.toString()
             var pesoStr = etPeso.toString()
-            var alturaStr = etPeso.toString()
+            var imcStr = returnIMC(etPeso.text.toString(), etAltura.text.toString())
             val db = HelperDB(this)
-            var newIMCData = DataIMC()
+            var newIMCData = DataIMC(currentDate,pesoStr,imcStr)
             db.adicionarIMC(newIMCData)
         }
 
         btHistorico.setOnClickListener {
             val db = HelperDB(this)
             val data = db.lerHistorico()
-            tvTabelaHistorico.text = ""
-            for (i in 0 until data.size) {
-                tvTabelaHistorico.append(
-                        data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
-            }
+            /*           tvTabelaHistorico.text = ""
+                       for (i in 0 until data.size) {
+                           tvTabelaHistorico.append(
+                                   data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
+                       }
+
+                       val intent = Intent(this, DisplayMessageActivity::class.java).apply {
+                           putExtra(EXTRA_MESSAGE, message)
+                       }
+                       startActivity(intent)*/
         }
 
         etAltura.doOnTextChanged { _, _, _, _ ->
@@ -57,7 +62,17 @@ class MainActivity : AppCompatActivity() {
             tvResultado.text = ""
         }
     }
-
+    fun returnIMC(peso: String, altura: String): String {
+        if (peso.isNullOrEmpty() || altura.isNullOrEmpty()) {
+            tvResultado.text = "Favor inserir peso e altura"
+        }
+        else {
+            val imc = peso.toDouble() / altura.toDouble() / altura.toDouble()
+            return String.format("%.1f", imc)
+        }
+        var x = "erro"
+        return x
+    }
     fun calcularIMC(peso: String, altura: String) {
         if (peso.isNullOrEmpty() || altura.isNullOrEmpty()) {
             tvResultado.text = "Favor inserir peso e altura"

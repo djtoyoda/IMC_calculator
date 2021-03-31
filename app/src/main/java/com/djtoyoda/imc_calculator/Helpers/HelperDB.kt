@@ -24,8 +24,8 @@ class HelperDB(
         val CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
                 "$COLUMNS_DATA DATE NOT NULL," +
                 "$COLUMNS_PESO DOUBLE NOT NULL," +
-                "$COLUMNS_IMC DOUBLE NOT NULL"+
-                "" +
+                "$COLUMNS_IMC DOUBLE NOT NULL,"+
+                " " +
                 "PRIMARY KEY($COLUMNS_DATA)"+
                 ")"
         db?.execSQL(CREATE_TABLE)
@@ -57,11 +57,12 @@ class HelperDB(
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
-                val data = DataIMC()
-                data.dataID = result.getString(result.getColumnIndex(COLUMNS_DATA)).toString()
-                data.pesoDB = result.getString(result.getColumnIndex(COLUMNS_PESO)).toDouble()
-                data.imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC)).toDouble()
+                val dataID = result.getString(result.getColumnIndex(COLUMNS_DATA))
+                val pesoDB = result.getString(result.getColumnIndex(COLUMNS_PESO))
+                val imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC))
+                val data = DataIMC(dataID, pesoDB, imcDB)
                 list.add(data)
+                println("${data.dataID} ${data.imcDB} ${data.pesoDB}")
             }
             while (result.moveToNext())
         }
