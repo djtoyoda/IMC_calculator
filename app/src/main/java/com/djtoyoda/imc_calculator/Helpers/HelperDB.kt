@@ -22,11 +22,13 @@ class HelperDB(
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
-                "$COLUMNS_DATA DATE NOT NULL," +
+                //"$COLUMNS_DATA TEXT NOT NULL," +
+                "$COLUMNS_DATA INTEGER NOT NULL," +
                 "$COLUMNS_PESO DOUBLE NOT NULL," +
                 "$COLUMNS_IMC DOUBLE NOT NULL,"+
                 " " +
-                "PRIMARY KEY($COLUMNS_DATA)"+
+                //"PRIMARY KEY($COLUMNS_DATA)"+
+                "PRIMARY KEY($COLUMNS_DATA AUTOINCREMENT)"+
                 ")"
         db?.execSQL(CREATE_TABLE)
     }
@@ -44,6 +46,7 @@ class HelperDB(
         valores.put(COLUMNS_DATA, dataHistorico.dataID)
         valores.put(COLUMNS_PESO, dataHistorico.pesoDB)
         valores.put(COLUMNS_IMC, dataHistorico.imcDB)
+        println("${dataHistorico.imcDB} ${dataHistorico.pesoDB}")
 
         val db = this.writableDatabase
         db.insert(TABLE_NAME, null, valores)
@@ -53,7 +56,7 @@ class HelperDB(
     fun lerHistorico(): MutableList<DataIMC> {
         val list: MutableList<DataIMC> = ArrayList()
         val db = this.readableDatabase
-        val query = "Select * from $TABLE_NAME"
+        val query = "SELECT * FROM $TABLE_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
@@ -62,7 +65,7 @@ class HelperDB(
                 val imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC))
                 val data = DataIMC(dataID, pesoDB, imcDB)
                 list.add(data)
-                println("${data.dataID} ${data.imcDB} ${data.pesoDB}")
+                println("${data.imcDB} ${data.pesoDB}")
             }
             while (result.moveToNext())
         }

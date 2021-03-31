@@ -1,25 +1,29 @@
 package com.djtoyoda.imc_calculator.main
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.djtoyoda.imc_calculator.Helpers.HelperDB
 import com.djtoyoda.imc_calculator.R
 import com.djtoyoda.imc_calculator.application.DataIMC
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_historico.*
-import java.util.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setListeners()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun setListeners() {
         btCalcular.setOnClickListener {
             calcularIMC(etPeso.text.toString(), etAltura.text.toString())
@@ -31,11 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         btGuardar.setOnClickListener {
-            var currentDate = Calendar.getInstance().time.toString()
-            var pesoStr = etPeso.toString()
-            var imcStr = returnIMC(etPeso.text.toString(), etAltura.text.toString())
+            val date = LocalDate.now()
+            val parsedDate = date.format(DateTimeFormatter.ISO_DATE).toString()
+            val imcStr = returnIMC(etPeso.text.toString(), etAltura.text.toString())
             val db = HelperDB(this)
-            var newIMCData = DataIMC(currentDate,pesoStr,imcStr)
+            val newIMCData = DataIMC(parsedDate, etPeso.text.toString(), imcStr)
             db.adicionarIMC(newIMCData)
         }
 
@@ -97,12 +101,24 @@ class MainActivity : AppCompatActivity() {
 
             //colore faixa do usuario
             when (doubleIMC){
-                in 0.0 .. 16.9 -> {Faixa1.setTextColor(Color.parseColor("#FF5200")); Sign1.setTextColor(Color.parseColor("#FF5200"))}
-                in 17.0 .. 18.4 -> {Faixa2.setTextColor(Color.parseColor("#FFA300")); Sign2.setTextColor(Color.parseColor("#FFA300"))}
-                in 18.5 .. 24.9 -> {Faixa3.setTextColor(Color.parseColor("#45FF00")); Sign3.setTextColor(Color.parseColor("#45FF00"))}
-                in 25.0 .. 29.9 -> {Faixa4.setTextColor(Color.parseColor("#FFA300")); Sign4.setTextColor(Color.parseColor("#FFA300"))}
-                in 30.0 .. 34.9 -> {Faixa5.setTextColor(Color.parseColor("#FF000D")); Sign5.setTextColor(Color.parseColor("#FF000D"))}
-                in 35.0 .. 39.9 -> {Faixa6.setTextColor(Color.parseColor("#FF000D")); Sign6.setTextColor(Color.parseColor("#FF000D"))}
+                in 0.0..16.9 -> {
+                    Faixa1.setTextColor(Color.parseColor("#FF5200")); Sign1.setTextColor(Color.parseColor("#FF5200"))
+                }
+                in 17.0..18.4 -> {
+                    Faixa2.setTextColor(Color.parseColor("#FFA300")); Sign2.setTextColor(Color.parseColor("#FFA300"))
+                }
+                in 18.5..24.9 -> {
+                    Faixa3.setTextColor(Color.parseColor("#45FF00")); Sign3.setTextColor(Color.parseColor("#45FF00"))
+                }
+                in 25.0..29.9 -> {
+                    Faixa4.setTextColor(Color.parseColor("#FFA300")); Sign4.setTextColor(Color.parseColor("#FFA300"))
+                }
+                in 30.0..34.9 -> {
+                    Faixa5.setTextColor(Color.parseColor("#FF000D")); Sign5.setTextColor(Color.parseColor("#FF000D"))
+                }
+                in 35.0..39.9 -> {
+                    Faixa6.setTextColor(Color.parseColor("#FF000D")); Sign6.setTextColor(Color.parseColor("#FF000D"))
+                }
                 else -> {Faixa7.setTextColor(Color.parseColor("#FF000D")); Sign7.setTextColor(Color.parseColor("#FF000D"))}
             }
         }
