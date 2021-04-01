@@ -1,5 +1,6 @@
 package com.djtoyoda.imc_calculator.main
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.core.widget.doOnTextChanged
 import com.djtoyoda.imc_calculator.Helpers.HelperDB
 import com.djtoyoda.imc_calculator.R
 import com.djtoyoda.imc_calculator.application.DataIMC
+import kotlinx.android.synthetic.main.activity_historico.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,19 +45,24 @@ class MainActivity : AppCompatActivity() {
             db.adicionarIMC(newIMCData)
         }
 
+        const val EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"
+
         btHistorico.setOnClickListener {
             val db = HelperDB(this)
             val data = db.lerHistorico()
-            /*           tvTabelaHistorico.text = ""
-                       for (i in 0 until data.size) {
-                           tvTabelaHistorico.append(
-                                   data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
-                       }
 
-                       val intent = Intent(this, DisplayMessageActivity::class.java).apply {
-                           putExtra(EXTRA_MESSAGE, message)
-                       }
-                       startActivity(intent)*/
+
+            val intent = Intent(this, activity_historico::class.java).apply {
+                startActivity(intent)
+
+
+                for (i in 0 until data.size) {
+                   tvTabelaHistorico.append(
+                           data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
+                }
+
+                   putExtra(EXTRA_MESSAGE, message)
+               }
         }
 
         etAltura.doOnTextChanged { _, _, _, _ ->

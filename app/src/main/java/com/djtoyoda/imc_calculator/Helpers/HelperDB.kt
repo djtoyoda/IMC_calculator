@@ -16,19 +16,19 @@ class HelperDB(
     }
 
     val TABLE_NAME = "historico"
+    val COLUMNS_ID = "ID"
     val COLUMNS_DATA = "Data"
     val COLUMNS_PESO = "Peso"
     val COLUMNS_IMC = "IMC"
 
     override fun onCreate(db: SQLiteDatabase?) {
         val CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
-                //"$COLUMNS_DATA TEXT NOT NULL," +
-                "$COLUMNS_DATA INTEGER NOT NULL," +
-                "$COLUMNS_PESO DOUBLE NOT NULL," +
-                "$COLUMNS_IMC DOUBLE NOT NULL,"+
+                "$COLUMNS_ID INTEGER NOT NULL," +
+                "$COLUMNS_DATA TEXT NOT NULL," +
+                "$COLUMNS_PESO TEXT NOT NULL," +
+                "$COLUMNS_IMC TEXT NOT NULL,"+
                 " " +
-                //"PRIMARY KEY($COLUMNS_DATA)"+
-                "PRIMARY KEY($COLUMNS_DATA AUTOINCREMENT)"+
+                "PRIMARY KEY ($COLUMNS_ID AUTOINCREMENT)" +
                 ")"
         db?.execSQL(CREATE_TABLE)
     }
@@ -37,25 +37,34 @@ class HelperDB(
         val DROP_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
         if (oldVersion != newVersion) {
             db?.execSQL(DROP_TABLE)
-            onCreate(db)
         }
+        onCreate(db)
     }
-
+/*
     fun adicionarIMC (dataHistorico : DataIMC) {
+        val db = this.writableDatabase
+        //db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+       // onCreate(db)
         val valores = ContentValues()
         valores.put(COLUMNS_DATA, dataHistorico.dataID)
         valores.put(COLUMNS_PESO, dataHistorico.pesoDB)
         valores.put(COLUMNS_IMC, dataHistorico.imcDB)
-        println("${dataHistorico.imcDB} ${dataHistorico.pesoDB}")
 
-        val db = this.writableDatabase
         db.insert(TABLE_NAME, null, valores)
+        db.close()
+    }*/
+
+    fun adicionarIMC (dataHistorico : DataIMC) {
+        val db = writableDatabase ?: return
+        val INSERT_IMC = "INSERT INTO $TABLE_NAME ($COLUMNS_DATA, $COLUMNS_PESO, $COLUMNS_IMC) VALUES(?, ?, ?)"
+        var array = arrayOf(dataHistorico.dataID, dataHistorico.pesoDB, dataHistorico.imcDB)
+        db.execSQL(INSERT_IMC,array)
         db.close()
     }
 
     fun lerHistorico(): MutableList<DataIMC> {
         val list: MutableList<DataIMC> = ArrayList()
-        val db = this.readableDatabase
+        val db = writableDatabase ?: return mutableListOf()
         val query = "SELECT * FROM $TABLE_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
@@ -65,10 +74,10 @@ class HelperDB(
                 val imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC))
                 val data = DataIMC(dataID, pesoDB, imcDB)
                 list.add(data)
-                println("${data.imcDB} ${data.pesoDB}")
             }
             while (result.moveToNext())
         }
+        db.close()
         return list
     }
 }
