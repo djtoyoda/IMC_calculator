@@ -11,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.djtoyoda.imc_calculator.Helpers.HelperDB
 import com.djtoyoda.imc_calculator.R
+import com.djtoyoda.imc_calculator.activities.HistoricoActivity
 import com.djtoyoda.imc_calculator.application.DataIMC
 import kotlinx.android.synthetic.main.activity_historico.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+const val EXTRA_MESSAGE = "com.djtoyoda.imc.MESSAGE"
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -27,15 +29,19 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setListeners() {
+
+        //botao para calcular IMC e mostrar resultado
         btCalcular.setOnClickListener {
-            calcularIMC(etPeso.text.toString(), etAltura.text.toString())
+            mostrarIMC(returnIMC(etPeso.text.toString(), etAltura.text.toString()))
         }
 
+        //botao para limpar campos
         btLimpar.setOnClickListener {
             etAltura.setText("")
             etPeso.setText("")
         }
 
+        //botao para salvar IMC no historico
         btGuardar.setOnClickListener {
             val date = LocalDate.now()
             val parsedDate = date.format(DateTimeFormatter.ISO_DATE).toString()
@@ -45,34 +51,29 @@ class MainActivity : AppCompatActivity() {
             db.adicionarIMC(newIMCData)
         }
 
-        const val EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"
-
+        //botao para mostrar historico na activity_historico
         btHistorico.setOnClickListener {
-            val db = HelperDB(this)
-            val data = db.lerHistorico()
+            showHistorico()
+            }
 
-
-            val intent = Intent(this, activity_historico::class.java).apply {
-                startActivity(intent)
-
-
-                for (i in 0 until data.size) {
-                   tvTabelaHistorico.append(
-                           data[i].dataID.toString() + " " + data[i].pesoDB + " " + data[i].imcDB + "\n")
-                }
-
-                   putExtra(EXTRA_MESSAGE, message)
-               }
-        }
-
+        //apaga o campo de aviso quando dados sao inseridos
         etAltura.doOnTextChanged { _, _, _, _ ->
             tvResultado.text = ""
         }
-
         etPeso.doOnTextChanged { _, _, _, _ ->
             tvResultado.text = ""
         }
     }
+
+    fun showHistorico() {
+        val db = HelperDB(this)
+        val data = db.lerHistorico()
+        val intent = Intent(this, HistoricoActivity::class.java).apply {
+            putExtra(EXTRA_MESSAGE, data)
+        }
+        startActivity(intent)
+    }
+
     fun returnIMC(peso: String, altura: String): String {
         if (peso.isNullOrEmpty() || altura.isNullOrEmpty()) {
             tvResultado.text = "Favor inserir peso e altura"
@@ -81,18 +82,17 @@ class MainActivity : AppCompatActivity() {
             val imc = peso.toDouble() / altura.toDouble() / altura.toDouble()
             return String.format("%.1f", imc)
         }
-        var x = "erro"
+        val x = "erro"
         return x
     }
-    fun calcularIMC(peso: String, altura: String) {
-        if (peso.isNullOrEmpty() || altura.isNullOrEmpty()) {
+
+    fun mostrarIMC(imc: String) {
+        if (imc == "erro") {
             tvResultado.text = "Favor inserir peso e altura"
         }
         else {
-            val imc = peso.toDouble() / altura.toDouble() / altura.toDouble()
-            val roundIMC = String.format("%.1f", imc)
-            var doubleIMC = roundIMC.toDouble()
-            tvResultado.text = "Seu IMC é ${String.format("%.1f", imc)}"
+            val doubleIMC = imc.toDouble()
+            tvResultado.text = "Seu IMC é $doubleIMC"
 
             //reset color
             for (i in 1..7) {

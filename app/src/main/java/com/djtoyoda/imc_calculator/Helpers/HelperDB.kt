@@ -40,7 +40,18 @@ class HelperDB(
         }
         onCreate(db)
     }
-/*
+
+    //inserir dados à tabela
+    fun adicionarIMC (dataHistorico : DataIMC) {
+        val db = writableDatabase ?: return
+        val INSERT_IMC = "INSERT INTO $TABLE_NAME ($COLUMNS_DATA, $COLUMNS_PESO, $COLUMNS_IMC) VALUES(?, ?, ?)"
+        var array = arrayOf(dataHistorico.dataID, dataHistorico.pesoDB, dataHistorico.imcDB)
+        db.execSQL(INSERT_IMC,array)
+        db.close()
+    }
+
+    /*
+    //outra forma de inserir dados
     fun adicionarIMC (dataHistorico : DataIMC) {
         val db = this.writableDatabase
         //db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
@@ -54,17 +65,10 @@ class HelperDB(
         db.close()
     }*/
 
-    fun adicionarIMC (dataHistorico : DataIMC) {
-        val db = writableDatabase ?: return
-        val INSERT_IMC = "INSERT INTO $TABLE_NAME ($COLUMNS_DATA, $COLUMNS_PESO, $COLUMNS_IMC) VALUES(?, ?, ?)"
-        var array = arrayOf(dataHistorico.dataID, dataHistorico.pesoDB, dataHistorico.imcDB)
-        db.execSQL(INSERT_IMC,array)
-        db.close()
-    }
-
-    fun lerHistorico(): MutableList<DataIMC> {
-        val list: MutableList<DataIMC> = ArrayList()
-        val db = writableDatabase ?: return mutableListOf()
+    fun lerHistorico(): String {
+        //val list: MutableList<DataIMC> = ArrayList()
+        var lista :String= "Data - Peso - IMC\n"
+        val db = writableDatabase ?: return ""
         val query = "SELECT * FROM $TABLE_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
@@ -72,12 +76,12 @@ class HelperDB(
                 val dataID = result.getString(result.getColumnIndex(COLUMNS_DATA))
                 val pesoDB = result.getString(result.getColumnIndex(COLUMNS_PESO))
                 val imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC))
-                val data = DataIMC(dataID, pesoDB, imcDB)
-                list.add(data)
+                val data = "$dataID - $pesoDB - $imcDB\n"
+                lista += data
             }
             while (result.moveToNext())
         }
         db.close()
-        return list
+        return lista
     }
 }
