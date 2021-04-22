@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/btApagar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_delete_black_24dp" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cell_layout"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_weight="1"
+        tools:text="Data" />
+
+    <TextView
+        android:id="@+id/tvPeso"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cell_layout"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_weight="1"
+        tools:text="Peso" />
+
+    <TextView
+        android:id="@+id/tvIMC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cell_layout"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_weight="1"
+        tools:text="IMC" />
+
+</LinearLayout>

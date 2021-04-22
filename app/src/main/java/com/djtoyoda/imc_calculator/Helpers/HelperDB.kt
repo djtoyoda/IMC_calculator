@@ -1,14 +1,11 @@
 package com.djtoyoda.imc_calculator.Helpers
 
 import android.content.Context
-import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.djtoyoda.imc_calculator.application.DataIMC
 
-class HelperDB(
-        context: Context
-) : SQLiteOpenHelper(context, nameDB, null, version) {
+class HelperDB(context: Context) : SQLiteOpenHelper(context, nameDB, null, version) {
 
     companion object {
         private val nameDB = "historicoIMC.db"
@@ -46,7 +43,7 @@ class HelperDB(
         val db = writableDatabase ?: return
         val INSERT_IMC = "INSERT INTO $TABLE_NAME ($COLUMNS_DATA, $COLUMNS_PESO, $COLUMNS_IMC) VALUES(?, ?, ?)"
         var array = arrayOf(dataHistorico.dataID, dataHistorico.pesoDB, dataHistorico.imcDB)
-        db.execSQL(INSERT_IMC,array)
+        db.execSQL(INSERT_IMC, array)
         db.close()
     }
 
@@ -65,23 +62,21 @@ class HelperDB(
         db.close()
     }*/
 
-    fun lerHistorico(): String {
-        //val list: MutableList<DataIMC> = ArrayList()
-        var lista :String= "Data - Peso - IMC\n"
-        val db = writableDatabase ?: return ""
+    fun lerHistorico(): ArrayList<DataIMC> {
+        val listaIMC = ArrayList<DataIMC>()
+        val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
-                val dataID = result.getString(result.getColumnIndex(COLUMNS_DATA))
-                val pesoDB = result.getString(result.getColumnIndex(COLUMNS_PESO))
-                val imcDB = result.getString(result.getColumnIndex(COLUMNS_IMC))
-                val data = "$dataID - $pesoDB - $imcDB\n"
-                lista += data
+                val dataIMC = DataIMC (result.getString(result.getColumnIndex(COLUMNS_DATA)),
+                                        result.getString(result.getColumnIndex(COLUMNS_PESO)),
+                                        result.getString(result.getColumnIndex(COLUMNS_IMC)))
+                listaIMC.add(dataIMC)
             }
             while (result.moveToNext())
         }
         db.close()
-        return lista
+        return listaIMC
     }
 }

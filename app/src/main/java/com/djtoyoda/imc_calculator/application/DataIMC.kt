@@ -1,6 +1,8 @@
 package com.djtoyoda.imc_calculator.application
 
-class DataIMC {
+import java.io.Serializable
+
+class DataIMC : Serializable {
     var dataID: String = "0"
     var pesoDB: String = "0"
     var imcDB: String = "0"
