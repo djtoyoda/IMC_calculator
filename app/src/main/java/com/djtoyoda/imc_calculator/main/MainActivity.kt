@@ -42,17 +42,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         //botao para salvar IMC no historico
-        btGuardar.setOnClickListener { guardarHistorico(
-            etPeso.text.toString(),
-            etAltura.text.toString()
-        ) }
+        btGuardar.setOnClickListener {
+            guardarHistorico(etPeso.text.toString(),etAltura.text.toString())
+        }
 
         //botao para mostrar historico na activity_historico
-        btHistorico.setOnClickListener { showHistorico() }
+        btHistorico.setOnClickListener {
+            showHistorico()
+        }
 
         //apaga o campo de aviso quando dados sao inseridos
         etAltura.doOnTextChanged { _, _, _, _ -> tvResultado.text = "" }
         etPeso.doOnTextChanged { _, _, _, _ -> tvResultado.text = "" }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -61,9 +63,12 @@ class MainActivity : AppCompatActivity() {
         val parsedDate = date.format(DateTimeFormatter.ISO_DATE).toString()
         val db = HelperDB(this)
         val newIMC = returnIMC(peso, altura)
+
         if (newIMC == "erro") return
-        else { val newIMCData = DataIMC(parsedDate, peso, newIMC)
-        db.adicionarIMC(newIMCData) }
+        else {
+            val newIMCData = DataIMC(0, parsedDate, peso, newIMC)
+            db.adicionarIMC(newIMCData)
+        }
     }
 
     private fun showHistorico() {
