@@ -1,10 +1,12 @@
 package com.djtoyoda.imc_calculator.main
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         //botao para calcular IMC e mostrar resultado
         btCalcular.setOnClickListener {
             mostrarIMC(returnIMC(etPeso.text.toString(), etAltura.text.toString()))
+            it.hideKeyboard()
         }
 
         //botao para limpar campos
@@ -44,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         //botao para salvar IMC no historico
         btGuardar.setOnClickListener {
             guardarHistorico(etPeso.text.toString(),etAltura.text.toString())
+            it.hideKeyboard()
         }
 
         //botao para mostrar historico na activity_historico
@@ -112,54 +116,40 @@ class MainActivity : AppCompatActivity() {
             //colore faixa do usuario
             when (doubleIMC) {
                 in 0.0..16.9 -> {
-                    Faixa1.setTextColor(Color.parseColor("#FF5200")); Sign1.setTextColor(
-                        Color.parseColor(
-                            "#FF5200"
-                        )
-                    )
-                }
+                    Faixa1.setTextColor(Color.parseColor("#FF5200"))
+                    Sign1.setTextColor(Color.parseColor("#FF5200"))
+                    tvResultado.setTextColor(Color.parseColor("#FF5200")) }
                 in 17.0..18.4 -> {
-                    Faixa2.setTextColor(Color.parseColor("#FFA300")); Sign2.setTextColor(
-                        Color.parseColor(
-                            "#FFA300"
-                        )
-                    )
-                }
+                    Faixa2.setTextColor(Color.parseColor("#FFA300"))
+                    Sign2.setTextColor(Color.parseColor("#FFA300"))
+                    tvResultado.setTextColor(Color.parseColor("#FFA300"))}
                 in 18.5..24.9 -> {
-                    Faixa3.setTextColor(Color.parseColor("#45FF00")); Sign3.setTextColor(
-                        Color.parseColor(
-                            "#45FF00"
-                        )
-                    )
-                }
+                    Faixa3.setTextColor(Color.parseColor("#45FF00"))
+                    Sign3.setTextColor(Color.parseColor("#45FF00"))
+                    tvResultado.setTextColor(Color.parseColor("#45FF00"))}
                 in 25.0..29.9 -> {
-                    Faixa4.setTextColor(Color.parseColor("#FFA300")); Sign4.setTextColor(
-                        Color.parseColor(
-                            "#FFA300"
-                        )
-                    )
-                }
+                    Faixa4.setTextColor(Color.parseColor("#FFA300"))
+                    Sign4.setTextColor(Color.parseColor("#FFA300"))
+                    tvResultado.setTextColor(Color.parseColor("#FFA300"))}
                 in 30.0..34.9 -> {
-                    Faixa5.setTextColor(Color.parseColor("#FF000D")); Sign5.setTextColor(
-                        Color.parseColor(
-                            "#FF000D"
-                        )
-                    )
-                }
+                    Faixa5.setTextColor(Color.parseColor("#FF000D"))
+                    Sign5.setTextColor(Color.parseColor("#FF000D"))
+                    tvResultado.setTextColor(Color.parseColor("#FF000D"))}
                 in 35.0..39.9 -> {
-                    Faixa6.setTextColor(Color.parseColor("#FF000D")); Sign6.setTextColor(
-                        Color.parseColor(
-                            "#FF000D"
-                        )
-                    )
-                }
-                else -> {Faixa7.setTextColor(Color.parseColor("#FF000D")); Sign7.setTextColor(
-                    Color.parseColor(
-                        "#FF000D"
-                    )
-                )
-                }
+                    Faixa6.setTextColor(Color.parseColor("#FF000D"))
+                    Sign6.setTextColor(Color.parseColor("#FF000D"))
+                    tvResultado.setTextColor(Color.parseColor("#FF000D"))}
+                else -> {
+                    Faixa7.setTextColor(Color.parseColor("#FF000D"))
+                    Sign7.setTextColor(Color.parseColor("#FF000D"))
+                    tvResultado.setTextColor(Color.parseColor("#FF000D"))}
             }
         }
+    }
+
+    //esconde teclado
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }
